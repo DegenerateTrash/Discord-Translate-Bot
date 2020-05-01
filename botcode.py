@@ -135,8 +135,11 @@ class MyClient(discord.Client):
     async def on_ready(self):
         print('Logged on as {0}!'.format(self.user))
 
+    
     async def on_message(self, message):
-        if translator.detect(message.content).lang != "en":
+        if message.content.lower() == "?lang":
+            await message.channel.send("All available languages can be found at:\nhttps://github.com/DegenerateTrash/Discord-Translate-Bot/blob/master/Languages.txt")
+        elif translator.detect(message.content).lang != "en":
             embed = discord.Embed(title="Translation",color=0xff72b9)
             embed.add_field(name="Original:", value="{0}".format(message.content), inline=False)
             embed.add_field(name="Translation({0} > {1} | Confidence: {2}):".format(LANGUAGES[translator.detect(message.content).lang].upper(),LANGUAGES[translator.translate(message.content).dest].upper(),translator.detect(message.content).confidence), value="{0}".format(translator.translate(message.content).text), inline=False)
@@ -152,8 +155,7 @@ class MyClient(discord.Client):
                 embed = discord.Embed(title="Translation",color=0xff72b9)
                 embed.add_field(name="Original:", value="{0}".format(message.content), inline=False)
                 embed.add_field(name="Translation({0} > {1}):".format(LANGUAGES["en"].upper(),LANGUAGES[item].upper()), value="{0}".format(translator.translate(msg,item).text), inline=False)
-                await message.channel.send(embed=embed)
-                
+                await message.channel.send(embed=embed)        
         
 
 
